@@ -1,0 +1,6 @@
+.DS_Store
+*/lib/smarty/src/
+
+# Smarty skompilowane szablony
+04_szablonowanie_smarty/app/templates_c/*
+!04_szablonowanie_smarty/app/templates_c/.gitkeep
