@@ -1,6 +1,3 @@
-<?php
-require_once _ROOT_PATH.'/app/calc.php';
-?>
 <!DOCTYPE html>
 <html lang="pl">
 	<head>
@@ -8,9 +5,9 @@ require_once _ROOT_PATH.'/app/calc.php';
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<title>Kalkulator Kredytowy</title>
 		<link rel="stylesheet" href="assets/css/main.css" />
-	<style>
-		html { scroll-behavior: smooth; }
-	</style>
+		<style>
+			html { scroll-behavior: smooth; }
+		</style>
 	</head>
 	<body class="homepage is-preload">
 		<div id="page-wrapper">
@@ -18,36 +15,10 @@ require_once _ROOT_PATH.'/app/calc.php';
 			<!-- Header -->
 			<div id="header-wrapper">
 				<div id="header" class="container">
-
-					<!-- Logo -->
 					<h1 id="logo"><a href="index.php">Kalkulator Kredytowy</a></h1>
-					<!-- Nav -->
 					<nav id="nav">
 						<ul>
-							<li>
-								<a href="#">Dropdown</a>
-								<ul>
-									<li><a href="#">Lorem ipsum dolor</a></li>
-									<li><a href="#">Magna phasellus</a></li>
-									<li><a href="#">Etiam dolore nisl</a></li>
-									<li>
-										<a href="#">Phasellus consequat</a>
-										<ul>
-											<li><a href="#">Lorem ipsum dolor</a></li>
-											<li><a href="#">Phasellus consequat</a></li>
-											<li><a href="#">Magna phasellus</a></li>
-											<li><a href="#">Etiam dolore nisl</a></li>
-										</ul>
-									</li>
-									<li><a href="#">Veroeros feugiat</a></li>
-								</ul>
-							</li>
-							<li class="current"><a href="index.php">Strona główna</a></li>
-							<li class="break"><a href="right-sidebar.html">Right Sidebar</a></li>
-							<li><a href="no-sidebar.html">No Sidebar</a></li>
-							<!-- <?php if ($rata_miesieczna !== null): ?>
-								<li><a href="#szczegoly">Wyniki</a></li>
-							<?php endif; ?> -->
+							<!-- <li class="current"><a href="index.php">Strona główna</a></li> -->
 						</ul>
 					</nav>
 				</div>
@@ -74,7 +45,8 @@ require_once _ROOT_PATH.'/app/calc.php';
 						<p>Wypełnij poniższy formularz, aby obliczyć parametry kredytu</p>
 					</header>
 
-					<form method="POST">
+					<!-- Formularz wywołuje kontroler -->
+					<form method="POST" action="calc.php">
 						<div class="row">
 
 							<div class="col-4 col-12-narrower">
@@ -195,8 +167,7 @@ require_once _ROOT_PATH.'/app/calc.php';
 				<div id="footer" class="container">
 					<header class="major">
 						<h2>Kalkulator Kredytowy</h2>
-						<p>Narzędzie do szacowania kosztów kredytu hipotecznego i gotówkowego.<br />
-						Wyniki mają charakter informacyjny — skonsultuj się z doradcą finansowym.</p>
+						<p>Narzędzie do szacowania kosztów kredytu hipotecznego i gotówkowego.
 					</header>
 				</div>
 				<div id="copyright" class="container">

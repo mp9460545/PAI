@@ -1,4 +1,5 @@
 <?php
+// kontroler
 
 $kwota = null;
 $lata = null;
@@ -36,7 +37,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $rata_miesieczna = $K * ($r * $czynnik) / ($czynnik - 1);
         }
 
-        $suma_splat   = $rata_miesieczna * $n;
+        $suma_splat = $rata_miesieczna * $n;
         $suma_odsetek = $suma_splat - $K;
     }
 }
+
+// Kontroler wywołuje widok na końcu
+include 'calc_view.php';
