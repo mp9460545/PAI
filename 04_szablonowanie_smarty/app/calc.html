@@ -1,0 +1,78 @@
+{extends file="../templates/main.html"}
+
+{block name=footer}Wyniki mają charakter informacyjny{/block}
+
+{block name=content}
+
+<header class="major">
+	<h2>Wprowadź dane kredytu</h2>
+	<p>Wypełnij poniższy formularz, aby obliczyć parametry kredytu</p>
+</header>
+
+{* formularz wywołuje kontroler *}
+<form method="POST" action="{$app_url}/app/calc.php">
+	<div class="row">
+
+		<div class="col-4 col-12-narrower">
+			<label for="kwota">Kwota kredytu (PLN)</label>
+			<input type="text" id="kwota" name="kwota" placeholder="np. 300000"
+				value="{if isset($form.kwota)}{$form.kwota|escape}{/if}"
+				style="width:100%; margin-top:0.5em;" />
+		</div>
+
+		<div class="col-4 col-12-narrower">
+			<label for="lata">Okres spłaty (lata)</label>
+			<input type="text" id="lata" name="lata" placeholder="np. 25"
+				value="{if isset($form.lata)}{$form.lata|escape}{/if}"
+				style="width:100%; margin-top:0.5em;" />
+		</div>
+
+		<div class="col-4 col-12-narrower">
+			<label for="oprocentowanie">Oprocentowanie roczne (%)</label>
+			<input type="text" id="oprocentowanie" name="oprocentowanie" placeholder="np. 7.5"
+				value="{if isset($form.oprocentowanie)}{$form.oprocentowanie|escape}{/if}"
+				style="width:100%; margin-top:0.5em;" />
+		</div>
+
+	</div>
+
+	<ul class="actions major" style="margin-top:2em;">
+		<li><input type="submit" value="Oblicz ratę" class="button" /></li>
+	</ul>
+</form>
+
+{* wyświetlenie błędów walidacji *}
+{if isset($messages) && count($messages) > 0}
+	<ul style="color:#e44; margin-top:1em;">
+	{foreach $messages as $msg}
+		<li>{$msg}</li>
+	{/foreach}
+	</ul>
+{/if}
+
+{* wyświetlenie wyników *}
+{if isset($result)}
+<div class="row features" style="margin-top:2em;">
+
+	<section class="col-4 col-12-narrower feature">
+		<header><h2>Miesięczna rata</h2></header>
+		<p style="font-size:1.4em; font-weight:bold;">{$result.rata} PLN</p>
+		<p>Stała rata kapitałowo-odsetkowa płatna co miesiąc.</p>
+	</section>
+
+	<section class="col-4 col-12-narrower feature">
+		<header><h2>Suma wszystkich spłat</h2></header>
+		<p style="font-size:1.4em; font-weight:bold;">{$result.suma_splat} PLN</p>
+		<p>Łączna kwota zapłacona bankowi przez cały okres.</p>
+	</section>
+
+	<section class="col-4 col-12-narrower feature">
+		<header><h2>Łączne odsetki</h2></header>
+		<p style="font-size:1.4em; font-weight:bold;">{$result.suma_odsetek} PLN</p>
+		<p>Koszt kredytu — różnica między sumą spłat a kwotą.</p>
+	</section>
+
+</div>
+{/if}
+
+{/block}

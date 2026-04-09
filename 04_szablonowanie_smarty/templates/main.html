@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pl">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<title>{$page_title|default:"Kalkulator Kredytowy"}</title>
+		<link rel="stylesheet" href="{$app_url}/../03_style/assets/css/main.css" />
+		<style>html { scroll-behavior: smooth; }</style>
+	</head>
+	<body class="homepage is-preload">
+		<div id="page-wrapper">
+
+			<!-- Header -->
+			<div id="header-wrapper">
+				<div id="header" class="container">
+					<h1 id="logo"><a href="{$app_url}/">{$page_title|default:"Kalkulator Kredytowy"}</a></h1>
+					<nav id="nav">
+						<ul>
+							<li class="current"><a href="{$app_url}/">Strona główna</a></li>
+						</ul>
+					</nav>
+				</div>
+
+				<!-- Hero -->
+				<section id="hero" class="container">
+					<header>
+						<h2>{$page_header|default:"Kalkulator Kredytowy"}</h2>
+					</header>
+					<p>{$page_description|default:""}</p>
+					<ul class="actions">
+						<li><a href="#app_content" class="button">Przejdź do kalkulatora</a></li>
+					</ul>
+				</section>
+			</div>
+
+			<!-- Treść strony -->
+			<div class="wrapper" id="app_content">
+				<section class="container">
+
+					{block name=content}Domyślna treść{/block}
+
+				</section>
+			</div>
+
+			<!-- Footer -->
+			<div id="footer-wrapper">
+				<div id="footer" class="container">
+					<header class="major">
+						<h2>{$page_title|default:"Kalkulator Kredytowy"}</h2>
+						<p>{block name=footer}Narzędzie do szacowania kosztów kredytu.{/block}</p>
+					</header>
+				</div>
+				<div id="copyright" class="container">
+					<ul class="menu">
+						<li>&copy; Kalkulator Kredytowy</li>
+						<li>Szablon: <a href="http://html5up.net">HTML5 UP</a></li>
+					</ul>
+				</div>
+			</div>
+
+		</div>
+
+		<!-- Scripts -->
+		<script src="{$app_url}/../03_style/assets/js/jquery.min.js"></script>
+		<script src="{$app_url}/../03_style/assets/js/jquery.dropotron.min.js"></script>
+		<script src="{$app_url}/../03_style/assets/js/browser.min.js"></script>
+		<script src="{$app_url}/../03_style/assets/js/breakpoints.min.js"></script>
+		<script src="{$app_url}/../03_style/assets/js/util.js"></script>
+		<script src="{$app_url}/../03_style/assets/js/main.js"></script>
+
+	</body>
+</html>
