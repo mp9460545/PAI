@@ -1,0 +1,73 @@
+html { scroll-behavior: smooth; }
+
+#header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100% !important;
+  max-width: none !important;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 4em;
+  padding: 0 2em;
+  background-color: rgba(255, 255, 255, 0);
+  border-bottom: 1px solid rgba(255, 255, 255, 0);
+  transition: background-color 0.4s ease, border-color 0.4s ease;
+  box-sizing: border-box;
+}
+
+#header.scrolled {
+  background-color: rgba(255, 255, 255, 1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+#header #logo {
+  position: static;
+  width: auto;
+  margin: 0;
+  left: auto;
+  padding: 0 10px;
+}
+
+#header #logo a {
+  color: #fff;
+  border: none;
+  background: transparent;
+  transition: color 0.3s ease;
+}
+
+#header.scrolled #logo a {
+  color: #333;
+  border: none;
+}
+
+#header #nav {
+  position: static;
+  width: auto;
+  left: auto;
+  height: auto;
+  line-height: normal;
+}
+
+#header #nav > ul > li > a {
+  color: #fff;
+  transition: color 0.3s ease;
+}
+
+#header.scrolled #nav > ul > li > a {
+  color: #333;
+}
+
+#header-wrapper {
+  padding-top: 4em;
+}
+
+#promo-wrapper {
+  background-image: url("/assets/css/images/overlay.png"), url("/images/promo.jpg");
+  background-size: 192px 192px, cover;
+  background-position: top left, center center;
+  color: #fff;
+}

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { signOut } from 'next-auth/react';
 
 function obliczRate(kwota, lata, oprocentowanie) {
   const n = lata * 12;
@@ -32,6 +33,10 @@ export default function Home() {
   const [oprocentowanie, setOprocentowanie] = useState('');
   const [bledy, setBledy] = useState({});
   const [wyniki, setWyniki] = useState(null);
+
+  function handleLogout() {
+    signOut({ callbackUrl: '/login' });
+  }
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -69,6 +74,7 @@ export default function Home() {
           <nav id="nav">
             <ul>
               <li className="current"><a href="#">Strona główna</a></li>
+              <li><a href="#" onClick={(e) => { e.preventDefault(); handleLogout(); }}>Wyloguj</a></li>
             </ul>
           </nav>
         </div>
