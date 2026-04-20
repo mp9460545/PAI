@@ -1,21 +1,21 @@
 'use client';
 
 import { useState } from 'react';
-import { signOut } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
-function obliczRate(kwota, lata, oprocentowanie) {
-  const n = lata * 12;
-  const r = oprocentowanie / 12 / 100;
+function calculateLoan(amount, years, interestRate) {
+  const n = years * 12;
+  const r = interestRate / 12 / 100;
 
-  const rata =
+  const monthlyPayment =
     r === 0
-      ? kwota / n
-      : (kwota * (r * Math.pow(1 + r, n))) / (Math.pow(1 + r, n) - 1);
+      ? amount / n
+      : (amount * (r * Math.pow(1 + r, n))) / (Math.pow(1 + r, n) - 1);
 
-  const sumaSplat = rata * n;
-  const sumaOdsetek = sumaSplat - kwota;
+  const totalPayment = monthlyPayment * n;
+  const totalInterest = totalPayment - amount;
 
-  return { rata, sumaSplat, sumaOdsetek };
+  return { monthlyPayment, totalPayment, totalInterest };
 }
 
 function formatPLN(value) {
@@ -28,39 +28,41 @@ function formatPLN(value) {
 }
 
 export default function Home() {
-  const [kwota, setKwota] = useState('');
-  const [lata, setLata] = useState('');
-  const [oprocentowanie, setOprocentowanie] = useState('');
-  const [bledy, setBledy] = useState({});
-  const [wyniki, setWyniki] = useState(null);
+  const [amount, setAmount] = useState('');
+  const [years, setYears] = useState('');
+  const [interestRate, setInterestRate] = useState('');
+  const [errors, setErrors] = useState({});
+  const [result, setResult] = useState(null);
+  const router = useRouter();
 
-  function handleLogout() {
-    signOut({ callbackUrl: '/login' });
+  async function handleLogout() {
+    await fetch('/api/logout', { method: 'POST' });
+    router.push('/login');
   }
 
   function handleSubmit(e) {
     e.preventDefault();
 
-    const noweBledy = {};
-    const kwotaNum = parseFloat(kwota);
-    const lataNum = parseInt(lata, 10);
-    const opr = parseFloat(oprocentowanie);
+    const newErrors = {};
+    const amountNum = parseFloat(amount);
+    const yearsNum = parseInt(years, 10);
+    const rateNum = parseFloat(interestRate);
 
-    if (!kwota || isNaN(kwotaNum) || kwotaNum <= 0)
-      noweBledy.kwota = 'Podaj prawidłową kwotę kredytu (liczba > 0).';
+    if (!amount || isNaN(amountNum) || amountNum <= 0)
+      newErrors.amount = 'Podaj prawidłową kwotę kredytu (liczba > 0).';
 
-    if (!lata || isNaN(lataNum) || lataNum <= 0 || lataNum > 50 || !Number.isInteger(lataNum))
-      noweBledy.lata = 'Podaj liczbę lat spłaty (liczba całkowita 1–50).';
+    if (!years || isNaN(yearsNum) || yearsNum <= 0 || yearsNum > 50 || !Number.isInteger(yearsNum))
+      newErrors.years = 'Podaj liczbę lat spłaty (liczba całkowita 1–50).';
 
-    if (!oprocentowanie || isNaN(opr) || opr <= 0 || opr > 100)
-      noweBledy.oprocentowanie = 'Podaj prawidłowe oprocentowanie (0–100%).';
+    if (!interestRate || isNaN(rateNum) || rateNum <= 0 || rateNum > 100)
+      newErrors.interestRate = 'Podaj prawidłowe oprocentowanie (0–100%).';
 
-    setBledy(noweBledy);
+    setErrors(newErrors);
 
-    if (Object.keys(noweBledy).length === 0) {
-      setWyniki(obliczRate(kwotaNum, lataNum, opr));
+    if (Object.keys(newErrors).length === 0) {
+      setResult(calculateLoan(amountNum, yearsNum, rateNum));
     } else {
-      setWyniki(null);
+      setResult(null);
     }
   }
 
@@ -106,55 +108,55 @@ export default function Home() {
             <div className="row">
 
               <div className="col-4 col-12-narrower">
-                <label htmlFor="kwota">Kwota kredytu (PLN)</label>
+                <label htmlFor="amount">Kwota kredytu (PLN)</label>
                 <input
                   type="text"
-                  id="kwota"
-                  name="kwota"
+                  id="amount"
+                  name="amount"
                   placeholder="np. 300000"
-                  value={kwota}
-                  onChange={(e) => setKwota(e.target.value)}
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
                   style={{ width: '100%', marginTop: '0.5em' }}
                 />
-                {bledy.kwota && (
+                {errors.amount && (
                   <p style={{ color: '#e44', margin: '0.3em 0 0', fontSize: '0.9em' }}>
-                    {bledy.kwota}
+                    {errors.amount}
                   </p>
                 )}
               </div>
 
               <div className="col-4 col-12-narrower">
-                <label htmlFor="lata">Okres spłaty (lata)</label>
+                <label htmlFor="years">Okres spłaty (lata)</label>
                 <input
                   type="text"
-                  id="lata"
-                  name="lata"
+                  id="years"
+                  name="years"
                   placeholder="np. 25"
-                  value={lata}
-                  onChange={(e) => setLata(e.target.value)}
+                  value={years}
+                  onChange={(e) => setYears(e.target.value)}
                   style={{ width: '100%', marginTop: '0.5em' }}
                 />
-                {bledy.lata && (
+                {errors.years && (
                   <p style={{ color: '#e44', margin: '0.3em 0 0', fontSize: '0.9em' }}>
-                    {bledy.lata}
+                    {errors.years}
                   </p>
                 )}
               </div>
 
               <div className="col-4 col-12-narrower">
-                <label htmlFor="oprocentowanie">Oprocentowanie roczne (%)</label>
+                <label htmlFor="interestRate">Oprocentowanie roczne (%)</label>
                 <input
                   type="text"
-                  id="oprocentowanie"
-                  name="oprocentowanie"
+                  id="interestRate"
+                  name="interestRate"
                   placeholder="np. 7.5"
-                  value={oprocentowanie}
-                  onChange={(e) => setOprocentowanie(e.target.value)}
+                  value={interestRate}
+                  onChange={(e) => setInterestRate(e.target.value)}
                   style={{ width: '100%', marginTop: '0.5em' }}
                 />
-                {bledy.oprocentowanie && (
+                {errors.interestRate && (
                   <p style={{ color: '#e44', margin: '0.3em 0 0', fontSize: '0.9em' }}>
-                    {bledy.oprocentowanie}
+                    {errors.interestRate}
                   </p>
                 )}
               </div>
@@ -170,16 +172,16 @@ export default function Home() {
       </div>
 
       {/* Wyniki */}
-      {wyniki && (
+      {result && (
         <>
           <div id="promo-wrapper">
             <section id="promo">
-              <h2>Miesięczna rata: {formatPLN(wyniki.rata)}</h2>
-              <a href="#szczegoly" className="button">Zobacz szczegóły</a>
+              <h2>Miesięczna rata: {formatPLN(result.monthlyPayment)}</h2>
+              <a href="#details" className="button">Zobacz szczegóły</a>
             </section>
           </div>
 
-          <div className="wrapper" id="szczegoly">
+          <div className="wrapper" id="details">
             <section className="container">
               <header className="major">
                 <h2>Wyniki obliczeń</h2>
@@ -190,7 +192,7 @@ export default function Home() {
                 <section className="col-4 col-12-narrower feature">
                   <header><h2>Miesięczna rata</h2></header>
                   <p style={{ fontSize: '1.4em', fontWeight: 'bold' }}>
-                    {formatPLN(wyniki.rata)}
+                    {formatPLN(result.monthlyPayment)}
                   </p>
                   <p>Stała rata kapitałowo-odsetkowa płatna co miesiąc przez cały okres spłaty.</p>
                 </section>
@@ -198,7 +200,7 @@ export default function Home() {
                 <section className="col-4 col-12-narrower feature">
                   <header><h2>Suma wszystkich spłat</h2></header>
                   <p style={{ fontSize: '1.4em', fontWeight: 'bold' }}>
-                    {formatPLN(wyniki.sumaSplat)}
+                    {formatPLN(result.totalPayment)}
                   </p>
                   <p>Łączna kwota, jaką zapłacisz bankowi przez cały okres kredytowania.</p>
                 </section>
@@ -206,7 +208,7 @@ export default function Home() {
                 <section className="col-4 col-12-narrower feature">
                   <header><h2>Łączne odsetki</h2></header>
                   <p style={{ fontSize: '1.4em', fontWeight: 'bold' }}>
-                    {formatPLN(wyniki.sumaOdsetek)}
+                    {formatPLN(result.totalInterest)}
                   </p>
                   <p>Koszt kredytu — różnica między sumą spłat a pożyczoną kwotą.</p>
                 </section>

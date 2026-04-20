@@ -1,5 +1,4 @@
 import Script from 'next/script';
-import Providers from './providers';
 import './custom.css';
 
 export const metadata = {
@@ -14,7 +13,7 @@ export default function RootLayout({ children }) {
         <link rel="stylesheet" href="/assets/css/main.css" />
       </head>
       <body className="homepage is-preload">
-        <Providers>{children}</Providers>
+        {children}
         <Script src="/assets/js/jquery.min.js" strategy="beforeInteractive" />
         <Script src="/assets/js/jquery.dropotron.min.js" strategy="afterInteractive" />
         <Script src="/assets/js/browser.min.js" strategy="afterInteractive" />

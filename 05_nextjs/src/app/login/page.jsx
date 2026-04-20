@@ -1,30 +1,38 @@
 'use client';
 
 import { useState } from 'react';
-import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
 export default function Login() {
   const router = useRouter();
   const [login, setLogin] = useState('');
-  const [pass, setPass] = useState('');
-  const [blad, setBlad] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e) {
     e.preventDefault();
-    setBlad('');
+    setError('');
+    setLoading(true);
 
-    const result = await signIn('credentials', {
-      login,
-      password: pass,
-      redirect: false,
+    const res = await fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ login, password }),
     });
 
-    if (result?.ok) {
+    setLoading(false);
+
+    if (res.ok) {
       router.push('/');
       router.refresh();
     } else {
-      setBlad('Niepoprawny login lub hasło');
+      try {
+        const data = await res.json();
+        setError(data.error || 'Niepoprawny login lub hasło');
+      } catch {
+        setError('Niepoprawny login lub hasło');
+      }
     }
   }
 
@@ -35,7 +43,6 @@ export default function Login() {
         <div className="container">
           <h1 id="logo"><a href="#">Kalkulator Kredytowy</a></h1>
         </div>
-
         <section id="hero" className="container">
           <header>
             <h2>Logowanie</h2>
@@ -62,25 +69,34 @@ export default function Login() {
               style={{ width: '100%', marginTop: '0.5em', marginBottom: '1em' }}
             />
 
-            <label htmlFor="pass">Hasło</label>
+            <label htmlFor="password">Hasło</label>
             <input
-              id="pass"
+              id="password"
               type="password"
               placeholder="hasło"
-              value={pass}
-              onChange={(e) => setPass(e.target.value)}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               style={{ width: '100%', marginTop: '0.5em' }}
             />
 
-            {blad && (
-              <p style={{ color: '#e44', margin: '0.8em 0 0', fontSize: '0.9em' }}>{blad}</p>
+            {error && (
+              <p style={{ color: '#e44', margin: '0.8em 0 0', fontSize: '0.9em' }}>
+                {error}
+              </p>
             )}
 
             <ul className="actions major" style={{ marginTop: '2em' }}>
-              <li><input type="submit" value="Zaloguj" className="button" /></li>
+              <li>
+                <input
+                  type="submit"
+                  value={loading ? 'Logowanie...' : 'Zaloguj'}
+                  className="button"
+                  disabled={loading}
+                />
+              </li>
             </ul>
-          </form>
 
+          </form>
         </section>
       </div>
 
